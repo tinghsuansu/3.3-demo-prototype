@@ -188,8 +188,34 @@
     font-weight: 600;
   }
 
+  /* ── C01 variant tabs ── */
+  #c01-tabs {
+    display: none;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .c01-tab {
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .c01-tab:hover { background: #2a2a2a; border-color: #555; color: #ccc; }
+  .c01-tab.c01-tab-active {
+    background: #1e1530;
+    border-color: #7c3aed;
+    color: #a78bfa;
+    font-weight: 600;
+  }
+
   /* ── Step pagination (M01 + M02 + C01) ── */
-  #m02-steps, #m01-steps, #c01-steps {
+  #m02-steps, #m01-steps, #c01-steps-v1, #c01-steps-v2 {
     display: none;
     width: 460px;
     margin-top: 10px;
@@ -237,6 +263,12 @@
 </head>
 <body>
 
+<!-- C01 variant tabs (shown only when C01 is active) -->
+<div id="c01-tabs">
+  <button class="c01-tab c01-tab-active" data-variant="v1">v1 · 1 exhibit</button>
+  <button class="c01-tab"                data-variant="v2">v2 · 2 exhibits</button>
+</div>
+
 <!-- Demo switcher -->
 <div id="remote">
   <button class="nav-btn" id="btn-prev" title="Previous (←)">&#8592;</button>
@@ -266,7 +298,8 @@
 <!-- Step pagination (shown only for the active demo) -->
 <div id="m02-steps"></div>
 <div id="m01-steps"></div>
-<div id="c01-steps"></div>
+<div id="c01-steps-v1"></div>
+<div id="c01-steps-v2"></div>
 
 <!-- Timer + pagination -->
 <div id="footer">
@@ -279,13 +312,12 @@
 
 <script src="m01-demo.js"></script>
 <script src="m02-demo.js"></script>
+<script src="c01-demo-v1.js"></script>
 <script src="c01-demo.js"></script>
 <script>
   const demos = ['M01', 'M02', 'C01'];
-  // M01 = AI companion (m02-demo.js exports mountM02)
-  // M02 = automotive cluster (m01-demo.js exports mountM01)
-  // C01 = museum (c01-demo.js exports mountC01)
   const demoDurations = { M01: 59, M02: 65, C01: null };
+  let activeC01Variant = 'v1';
 
   let current = 0;
   const panels   = demos.map(id => document.getElementById('demo-' + id));
@@ -410,14 +442,23 @@
     let ctrl = null;
     if (id === 'M01' && typeof mountM02 === 'function') ctrl = mountM02(el);
     if (id === 'M02' && typeof mountM01 === 'function') ctrl = mountM01(el);
-    if (id === 'C01' && typeof mountC01 === 'function') ctrl = mountC01(el);
+    if (id === 'C01') {
+      if (activeC01Variant === 'v1' && typeof mountC01v1 === 'function') ctrl = mountC01v1(el);
+      if (activeC01Variant === 'v2' && typeof mountC01v2 === 'function') ctrl = mountC01v2(el);
+    }
 
-    document.getElementById('m01-steps').style.display = 'none';
-    document.getElementById('m02-steps').style.display = 'none';
-    document.getElementById('c01-steps').style.display = 'none';
+    document.getElementById('m01-steps').style.display    = 'none';
+    document.getElementById('m02-steps').style.display    = 'none';
+    document.getElementById('c01-steps-v1').style.display = 'none';
+    document.getElementById('c01-steps-v2').style.display = 'none';
+    document.getElementById('c01-tabs').style.display     = (id === 'C01') ? 'flex' : 'none';
 
     if (ctrl) {
-      const stepsKey = { M01: 'm01-steps', M02: 'm02-steps', C01: 'c01-steps' };
+      const stepsKey = {
+        M01: 'm01-steps',
+        M02: 'm02-steps',
+        C01: 'c01-steps-' + activeC01Variant,
+      };
       const stepsEl = document.getElementById(stepsKey[id]);
       stepsEl.style.display = 'flex';
       buildSteps(stepsEl, ctrl, id !== 'C01');
@@ -428,6 +469,16 @@
     startTimer(id);
     updatePagination(id);
   }
+
+  // ── C01 tab switching ──
+  document.querySelectorAll('.c01-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.dataset.variant === activeC01Variant) return;
+      activeC01Variant = tab.dataset.variant;
+      document.querySelectorAll('.c01-tab').forEach(t => t.classList.toggle('c01-tab-active', t === tab));
+      if (demos[current] === 'C01') mountDemo('C01');
+    });
+  });
 
   // ── Navigation ──
   function goTo(index) {

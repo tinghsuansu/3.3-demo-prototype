@@ -452,27 +452,6 @@
   transition: color 0.15s;
 }
 .c01-c3ar-more:hover { color: #777; }
-.c01-back-btn {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(30,30,30,0.85);
-  border: 1px solid #444;
-  color: #aaa;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  z-index: 10;
-  transition: background 0.15s;
-}
-.c01-back-btn:hover { background: #2a2a2a; }
 
 /* =============================================
    SCREEN C3a — Exhibit Detail
@@ -711,6 +690,33 @@
   transition: background 0.15s;
 }
 .c01-c4-close:hover { background: #2a2a2a; }
+.c01-c4-closing-label {
+  font-size: 18px;
+  color: #aaa;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.c01-c4-closing-time {
+  font-size: 52px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+.c01-c4-wrap-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: #fff;
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.c01-c4-wrap-btn:hover { opacity: 0.85; }
 
 /* =============================================
    SCREEN C5 — Visit Complete (intro)
@@ -890,27 +896,6 @@
   color: #666;
   letter-spacing: 1px;
 }
-.c01-scene-close {
-  position: absolute;
-  bottom: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #1e1e1e;
-  border: 1px solid #444;
-  color: #aaa;
-  font-size: 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  transition: background 0.15s;
-  z-index: 5;
-}
-.c01-scene-close:hover { background: #2a2a2a; }
 `;
 
   // ─── Screen HTML builders ──────────────────────────────────────────────────
@@ -944,9 +929,8 @@
         </div>
         <div class="c01-c1-buttons">
           <button class="c01-btn-base c01-btn-dark" data-action="to-C1_1">My Collection</button>
-          <button class="c01-btn-base c01-btn-dark" data-action="to-C5">End Visit</button>
+          <button class="c01-btn-base c01-btn-dark" data-action="to-C6">End Visit</button>
         </div>
-        <button class="c01-scene-close" data-action="home-back">✕</button>
       </div>
 
       <!-- C1_1: My Collection -->
@@ -988,13 +972,12 @@
           <div class="c01-c2_2-gallery">Jade Gallery</div>
           <div class="c01-c2_2-instruction">Move closer to learn more</div>
         </div>
-        <div class="c01-c2_2-exhibit" data-action="to-C3a" style="top:148px; right:54px;">Jadeite Cabbage</div>
-        <div class="c01-c2_2-exhibit" data-action="to-C3b" style="top:292px; left:66px;">Meat-shaped Stone</div>
+        <div class="c01-c2_2-exhibit" data-action="to-C3" style="top:148px; right:54px;">Jadeite Cabbage</div>
         <div class="c01-c2_2-home" data-action="to-C1">⌂</div>
       </div>
 
-      <!-- C3a: AR Hotspot (Jadeite Cabbage) — scene 6a -->
-      <div id="c01-screen-C3a" class="c01-screen c01-c3ar">
+      <!-- C3: AR Hotspot (C3a/C3b state) -->
+      <div id="c01-screen-C3" class="c01-screen c01-c3ar">
         <div class="c01-c2_1-corridor">
           <svg viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg">
             <line x1="60"  y1="460" x2="230" y2="120" stroke="#161616" stroke-width="0.5"/>
@@ -1017,11 +1000,10 @@
             <button class="c01-c3ar-star" data-action="to-C3d">☆</button>
           </div>
         </div>
-        <button class="c01-scene-close" data-action="to-C2_2">✕</button>
       </div>
 
-      <!-- C3a_1: Exhibit Detail — Jade Tone -->
-      <div id="c01-screen-C3a_1" class="c01-screen c01-c3">
+      <!-- C3_1: Exhibit Detail — Jade Tone -->
+      <div id="c01-screen-C3_1" class="c01-screen c01-c3">
         <div class="c01-c3-photo">
           <div class="c01-c3-photo-icon">🪨</div>
         </div>
@@ -1031,13 +1013,13 @@
             Natural jadeite gradation from white base to deep green — no dye used.
           </div>
           <div class="c01-c3-actions">
-            <button class="c01-c3-close" data-action="to-C3a">✕</button>
+            <button class="c01-c3-close" data-action="to-C3">✕</button>
           </div>
         </div>
       </div>
 
-      <!-- C3a_2: Exhibit Detail — Katydid -->
-      <div id="c01-screen-C3a_2" class="c01-screen c01-c3">
+      <!-- C3_2: Exhibit Detail — Katydid -->
+      <div id="c01-screen-C3_2" class="c01-screen c01-c3">
         <div class="c01-c3-photo">
           <div class="c01-c3-photo-icon">🪨</div>
         </div>
@@ -1047,66 +1029,7 @@
             Locust and katydid are traditional metaphors for having numerous children.
           </div>
           <div class="c01-c3-actions">
-            <button class="c01-c3-close" data-action="to-C3a">✕</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- C3b: AR Hotspot (Meat-shaped Stone) -->
-      <div id="c01-screen-C3b" class="c01-screen c01-c3ar">
-        <div class="c01-c2_1-corridor">
-          <svg viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg">
-            <line x1="60"  y1="460" x2="230" y2="120" stroke="#161616" stroke-width="0.5"/>
-            <line x1="400" y1="460" x2="230" y2="120" stroke="#161616" stroke-width="0.5"/>
-          </svg>
-        </div>
-        <div class="c01-c3ar-dot" style="top:205px; left:145px;" data-hotspot="1">
-          <div class="c01-c3ar-dot-inner"></div>
-        </div>
-        <div class="c01-c3ar-dot" style="top:155px; left:250px;" data-hotspot="2">
-          <div class="c01-c3ar-dot-inner"></div>
-        </div>
-        <div class="c01-c3ar-card">
-          <div class="c01-c3ar-card-id">AD1680-1895</div>
-          <div class="c01-c3ar-row">
-            <div>
-              <div class="c01-c3ar-title">Meat-shaped Stone</div>
-              <div class="c01-c3ar-desc">A jasper stone carved to mimic braised pork belly with astonishing realism.</div>
-            </div>
-            <button class="c01-c3ar-star" data-action="to-C3d">☆</button>
-          </div>
-        </div>
-        <button class="c01-scene-close" data-action="to-C2_2">✕</button>
-      </div>
-
-      <!-- C3b_1: Exhibit Detail — Layered Texture -->
-      <div id="c01-screen-C3b_1" class="c01-screen c01-c3">
-        <div class="c01-c3-photo">
-          <div class="c01-c3-photo-icon">🥩</div>
-        </div>
-        <div class="c01-c3-card">
-          <div class="c01-c3-subtitle">Layered Texture</div>
-          <div class="c01-c3-tab-content">
-            Layers of jasper stone carved and stained to mimic braised pork belly in perfect detail.
-          </div>
-          <div class="c01-c3-actions">
-            <button class="c01-c3-close" data-action="to-C3b">✕</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- C3b_2: Exhibit Detail — Royal Origin -->
-      <div id="c01-screen-C3b_2" class="c01-screen c01-c3">
-        <div class="c01-c3-photo">
-          <div class="c01-c3-photo-icon">🥩</div>
-        </div>
-        <div class="c01-c3-card">
-          <div class="c01-c3-subtitle">Royal Origin</div>
-          <div class="c01-c3-tab-content">
-            Unearthed during the Qing Dynasty; believed to have been a royal amusement piece.
-          </div>
-          <div class="c01-c3-actions">
-            <button class="c01-c3-close" data-action="to-C3b">✕</button>
+            <button class="c01-c3-close" data-action="to-C3">✕</button>
           </div>
         </div>
       </div>
@@ -1116,18 +1039,13 @@
         <div class="c01-c3d-thumb">🪨</div>
         <div class="c01-c3d-name">Jadeite Cabbage</div>
         <div class="c01-c3d-sub">is saved to your collection!</div>
-        <button class="c01-c3-close" data-action="to-C2_2">✕</button>
       </div>
 
       <!-- C4: Recommendation -->
       <div id="c01-screen-C4" class="c01-screen c01-c4">
-        <div class="c01-c4-thumb">🥩</div>
-        <div class="c01-c4-also">You might also like</div>
-        <div class="c01-c4-name">Meat-Shaped Stone</div>
-        <div class="c01-c4-location" data-action="to-C2_2" style="cursor:pointer;">📍 Jade Gallery</div>
-        <div class="c01-c4-actions">
-          <button class="c01-c4-close" data-action="to-C2_2">✕</button>
-        </div>
+        <div class="c01-c4-closing-label">The museum will close at</div>
+        <div class="c01-c4-closing-time">17:00</div>
+        <button class="c01-c4-wrap-btn" data-action="to-C5">Wrap Up My Visit</button>
       </div>
 
       <!-- C5: Visit Complete (intro, auto-advance) -->
@@ -1183,7 +1101,7 @@
   // Store cleanup refs per container
   const _state = new WeakMap();
 
-  function mountC01v2(container) {
+  function mountC01v1(container) {
     // 1. Clean up any previous instance
     if (_state.has(container)) {
       const old = _state.get(container);
@@ -1214,13 +1132,10 @@
       { id: 'C1_1', name: 'Collect', dur: 0    },
       { id: 'C2_1', name: 'AR Nav',  dur: 3000 },
       { id: 'C2_2', name: 'AR Scan', dur: 0    },
-      { id: 'C3a',   name: '6a Jade',  dur: 0    },
-      { id: 'C3a_1', name: '7a Tone',  dur: 0    },
-      { id: 'C3a_2', name: '8a Katy',  dur: 0    },
-      { id: 'C3b',   name: '6b Meat',  dur: 0    },
-      { id: 'C3b_1', name: '7b Text',  dur: 0    },
-      { id: 'C3b_2', name: '8b Orig',  dur: 0    },
-      { id: 'C3d',   name: 'Saved',    dur: 1500 },
+      { id: 'C3',   name: 'Hotspot', dur: 0    },
+      { id: 'C3_1', name: 'Detail1', dur: 0    },
+      { id: 'C3_2', name: 'Detail2', dur: 0    },
+      { id: 'C3d',  name: 'Saved',   dur: 1500 },
       { id: 'C4',   name: 'Nearby',   dur: 4000 },
       { id: 'C5',   name: 'Complete', dur: 1800 },
       { id: 'C5_1', name: 'Recap',    dur: 0    },
@@ -1233,26 +1148,7 @@
 
     let onChangeCb = null;
     let currentScreen = 'C0';
-    let prevScreen = null;
-    let savedCount = 0;
-    let lastSavedExhibit = null;
     const timers = [];
-
-    function updateRecommendation() {
-      var recommendMeat = (lastSavedExhibit === 'C3a');
-      var c4 = root.querySelector('#c01-screen-C4');
-      if (!c4) return;
-      c4.querySelector('.c01-c4-thumb').textContent = recommendMeat ? '🥩' : '🪨';
-      c4.querySelector('.c01-c4-name').textContent  = recommendMeat ? 'Meat-Shaped Stone' : 'Jadeite Cabbage';
-    }
-
-    function updateSavedScreen() {
-      var isMeat = (lastSavedExhibit === 'C3b');
-      var c3d = root.querySelector('#c01-screen-C3d');
-      if (!c3d) return;
-      c3d.querySelector('.c01-c3d-thumb').textContent = isMeat ? '🥩' : '🪨';
-      c3d.querySelector('.c01-c3d-name').textContent  = isMeat ? 'Meat-shaped Stone' : 'Jadeite Cabbage';
-    }
     const tabContent = {
       jade:    'Natural jadeite gradation from white base to deep green — no dye used.',
       katydid: 'Locust and katydid are traditional metaphors for having numerous children.',
@@ -1265,7 +1161,6 @@
       timers.length = 0;
 
       var screen = SCREENS[index];
-      prevScreen = currentScreen;
       currentScreen = screen.id;
 
       root.querySelectorAll('.c01-screen').forEach(function(s) {
@@ -1284,9 +1179,7 @@
         timers.push(setTimeout(function() { showStep(idToIndex['C2_2']); }, 3000));
       }
       if (screen.id === 'C3d') {
-        timers.push(setTimeout(function() {
-          showStep(idToIndex[savedCount >= 2 ? 'C2_2' : 'C4']);
-        }, 1500));
+        timers.push(setTimeout(function() { showStep(idToIndex['C4']); }, 1800));
       }
       if (screen.id === 'C5') {
         timers.push(setTimeout(function() { showStep(idToIndex['C5_1']); }, 1800));
@@ -1330,42 +1223,24 @@
         el = el.parentElement;
       }
 
-      if (action === 'home-back') {
-        e.stopPropagation();
-        showScreen(prevScreen === 'C0' || prevScreen === null ? 'C2_2' : prevScreen);
-        return;
-      }
-
       if (action) {
         e.stopPropagation();
-        if (action === 'to-C3d') {
-          savedCount++;
-          lastSavedExhibit = currentScreen; // 'C3a' or 'C3b'
-          updateSavedScreen();
-          updateRecommendation();
-        }
         const dest = action.replace('to-', '');
         showScreen(dest);
         return;
       }
 
-      // Hotspot dot tap → route to the correct exhibit's detail pages
+      // Hotspot dot tap → navigate to C3_1 or C3_2
       var dot = e.target.closest('.c01-c3ar-dot');
       if (dot) {
         var hotspot = dot.dataset.hotspot;
-        if (currentScreen === 'C3b') {
-          showScreen(hotspot === '2' ? 'C3b_2' : 'C3b_1');
-        } else {
-          showScreen(hotspot === '2' ? 'C3a_2' : 'C3a_1');
-        }
+        showScreen(hotspot === '2' ? 'C3_2' : 'C3_1');
         e.stopPropagation();
         return;
       }
 
       // Screen-wide tap handlers (no data-action found)
       if (currentScreen === 'C7') {
-        savedCount = 0;
-        lastSavedExhibit = null;
         showScreen('C0');
       }
     }
@@ -1516,9 +1391,9 @@
 
   // ─── Export ────────────────────────────────────────────────────────────────
   if (typeof window !== 'undefined') {
-    window.mountC01v2 = mountC01v2;
+    window.mountC01v1 = mountC01v1;
   }
 
 })();
 
-if (typeof module !== 'undefined') module.exports = { mountC01v2 };
+if (typeof module !== 'undefined') module.exports = { mountC01v1 };
