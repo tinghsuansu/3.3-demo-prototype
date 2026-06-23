@@ -119,7 +119,7 @@
 .c01-c1-ccard-label {
   flex-shrink: 0;
   padding: 9px 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: #bbb;
   text-align: center;
@@ -140,7 +140,7 @@
   border-radius: 8px;
   border: none;
   color: #fff;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   letter-spacing: 0.2px;
@@ -165,7 +165,7 @@
   top: 90px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
   color: #fff;
   white-space: nowrap;
@@ -175,7 +175,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 14px;
+  font-size: 18px;
   color: #444;
 }
 .c01-c1_1-close {
@@ -214,7 +214,7 @@
   border: 1px solid #333;
   border-radius: 20px;
   padding: 6px 14px;
-  font-size: 12px;
+  font-size: 18px;
   color: #fff;
   white-space: nowrap;
   letter-spacing: 0.3px;
@@ -293,7 +293,7 @@
   letter-spacing: 0.5px;
 }
 .c01-c2_2-instruction {
-  font-size: 13px;
+  font-size: 18px;
   color: #fff;
   white-space: nowrap;
 }
@@ -303,7 +303,7 @@
   border: 1px solid #5b21b6;
   border-radius: 8px;
   padding: 10px 14px;
-  font-size: 11px;
+  font-size: 18px;
   color: #fff;
   white-space: nowrap;
   cursor: pointer;
@@ -393,7 +393,7 @@
 .c01-screen:not(.c01-active) .c01-c3ar-dot-inner { animation-play-state: paused; }
 .c01-c3ar-card {
   position: absolute;
-  bottom: 0;
+  bottom: 44px;
   left: 50%;
   transform: translateX(-50%);
   width: 320px;
@@ -421,7 +421,7 @@
   line-height: 1.2;
 }
 .c01-c3ar-desc {
-  font-size: 11px;
+  font-size: 18px;
   color: #777;
   margin-top: 5px;
   line-height: 1.55;
@@ -516,8 +516,10 @@
   line-height: 1.2;
 }
 .c01-c3-subtitle {
-  font-size: 12px;
-  color: #888;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
 }
 .c01-c3-tabs {
   display: flex;
@@ -540,7 +542,7 @@
   border-bottom-color: #7c3aed;
 }
 .c01-c3-tab-content {
-  font-size: 12px;
+  font-size: 18px;
   color: #aaa;
   line-height: 1.6;
   flex: 1;
@@ -619,7 +621,7 @@
   text-align: center;
 }
 .c01-c3d-sub {
-  font-size: 13px;
+  font-size: 18px;
   color: #888;
   text-align: center;
 }
@@ -648,7 +650,7 @@
   margin-bottom: 4px;
 }
 .c01-c4-also {
-  font-size: 11px;
+  font-size: 18px;
   color: #555;
   letter-spacing: 0.3px;
 }
@@ -663,14 +665,14 @@
   border: 1px solid #333;
   border-radius: 20px;
   padding: 4px 12px;
-  font-size: 11px;
+  font-size: 18px;
   color: #888;
   margin-bottom: 4px;
 }
 .c01-c4-actions {
   display: flex;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 24px;
 }
 .c01-c4-close {
   width: 36px;
@@ -716,7 +718,7 @@
   padding-top: 64px;
 }
 .c01-c5-you-are {
-  font-size: 13px;
+  font-size: 18px;
   color: #888;
   letter-spacing: 0.3px;
 }
@@ -733,13 +735,13 @@
   border: 1px solid #7c3aed;
   border-radius: 12px;
   padding: 3px 12px;
-  font-size: 11px;
+  font-size: 18px;
   color: #a78bfa;
   letter-spacing: 0.5px;
 }
 .c01-c5-section {
   margin-top: 14px;
-  font-size: 12px;
+  font-size: 18px;
   color: #555;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -789,7 +791,7 @@
     #333;
 }
 .c01-c5-engaged {
-  font-size: 8px;
+  font-size: 12px;
   background: #888;
   color: #fff;
   border-radius: 3px;
@@ -798,21 +800,21 @@
   letter-spacing: 0.3px;
 }
 .c01-c5-cname {
-  font-size: 9px;
+  font-size: 14px;
   color: #777;
   text-align: center;
   line-height: 1.3;
   padding: 0 4px;
 }
 .c01-c5-end-btn {
-  margin-top: 14px;
+  margin-top: 28px;
   width: 160px;
-  height: 36px;
+  height: 40px;
   background: #fff;
   border: none;
   border-radius: 8px;
   color: #000;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -840,7 +842,7 @@
   line-height: 1.4;
 }
 .c01-c6-sub {
-  font-size: 13px;
+  font-size: 18px;
   color: #666;
   line-height: 1.5;
   margin-top: 4px;
@@ -863,7 +865,7 @@
   height: 80px;
 }
 .c01-c7-label {
-  font-size: 12px;
+  font-size: 18px;
   color: #666;
   letter-spacing: 1px;
 }
@@ -952,18 +954,14 @@
       <div id="c01-screen-C3" class="c01-screen c01-c3ar">
         <div class="c01-c2_1-corridor">
           <svg viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg">
-            <line x1="0"   y1="460" x2="230" y2="120" stroke="#1e1e1e" stroke-width="1"/>
-            <line x1="460" y1="460" x2="230" y2="120" stroke="#1e1e1e" stroke-width="1"/>
             <line x1="60"  y1="460" x2="230" y2="120" stroke="#161616" stroke-width="0.5"/>
             <line x1="400" y1="460" x2="230" y2="120" stroke="#161616" stroke-width="0.5"/>
-            <line x1="0" y1="360" x2="460" y2="360" stroke="#141414" stroke-width="0.5"/>
-            <line x1="0" y1="410" x2="460" y2="410" stroke="#141414" stroke-width="0.5"/>
           </svg>
         </div>
-        <div class="c01-c3ar-dot" style="top:195px; left:160px;" data-hotspot="1">
+        <div class="c01-c3ar-dot" style="top:210px; left:130px;" data-hotspot="1">
           <div class="c01-c3ar-dot-inner"></div>
         </div>
-        <div class="c01-c3ar-dot" style="top:162px; left:195px;" data-hotspot="2">
+        <div class="c01-c3ar-dot" style="top:148px; left:255px;" data-hotspot="2">
           <div class="c01-c3ar-dot-inner"></div>
         </div>
         <div class="c01-c3ar-card">
@@ -984,10 +982,6 @@
           <div class="c01-c3-photo-icon">🪨</div>
         </div>
         <div class="c01-c3-card">
-          <div class="c01-c3-card-header">
-            <span class="c01-c3-id">AD1644-1911</span>
-          </div>
-          <div class="c01-c3-title">Jadeite Cabbage</div>
           <div class="c01-c3-subtitle">Jade Tone</div>
           <div class="c01-c3-tab-content">
             Natural jadeite gradation from white base to deep green — no dye used.
@@ -1004,10 +998,6 @@
           <div class="c01-c3-photo-icon">🪨</div>
         </div>
         <div class="c01-c3-card">
-          <div class="c01-c3-card-header">
-            <span class="c01-c3-id">AD1644-1911</span>
-          </div>
-          <div class="c01-c3-title">Jadeite Cabbage</div>
           <div class="c01-c3-subtitle">Katydid</div>
           <div class="c01-c3-tab-content">
             Locust and katydid are traditional metaphors for having numerous children.
