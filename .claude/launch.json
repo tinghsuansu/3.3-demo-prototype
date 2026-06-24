@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "demo",
+      "runtimeExecutable": "ruby",
+      "runtimeArgs": ["-run", "-e", "httpd", "/Users/jasminesu/Desktop/3.3 demo/0617_prototype (Claude Code)", "-p", "7331"],
+      "port": 7331,
+      "autoPort": false
+    }
+  ]
+}
