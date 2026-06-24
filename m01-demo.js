@@ -941,16 +941,64 @@
     let current = 0;
     let onChangeCb = null;
     const timers = [];
+    const slideTimers = [];
 
     function clearTimers() {
       timers.forEach(id => clearTimeout(id));
       timers.splice(0, timers.length);
     }
 
+    function clearSlideTimers() {
+      slideTimers.forEach(t => t.type === 'interval' ? clearInterval(t.id) : clearTimeout(t.id));
+      slideTimers.splice(0, slideTimers.length);
+    }
+
+    function runSlideAnimation(index, slide) {
+      clearSlideTimers();
+      if (index === 1) {
+        // Scene 2: P→D, then speed 0→42
+        const speedEl = slide.querySelector('.m01-cluster-speed');
+        const gearEl  = slide.querySelector('.m01-gear-box');
+        if (!speedEl || !gearEl) return;
+        gearEl.textContent = 'P';
+        speedEl.textContent = '0';
+        const t1 = setTimeout(() => { gearEl.textContent = 'D'; }, 600);
+        const t2 = setTimeout(() => {
+          let spd = 0;
+          const iv = setInterval(() => {
+            spd++;
+            speedEl.textContent = spd;
+            if (spd >= 42) clearInterval(iv);
+          }, Math.round(2000 / 42));
+          slideTimers.push({ type: 'interval', id: iv });
+        }, 1000);
+        slideTimers.push({ type: 'timeout', id: t1 });
+        slideTimers.push({ type: 'timeout', id: t2 });
+      } else if (index === 11) {
+        // Scene 12: speed 42→0, then D→P
+        const speedEl = slide.querySelector('.m01-cluster-speed');
+        const gearEl  = slide.querySelector('.m01-gear-box');
+        if (!speedEl || !gearEl) return;
+        gearEl.textContent = 'D';
+        speedEl.textContent = '42';
+        let spd = 42;
+        const iv = setInterval(() => {
+          spd--;
+          speedEl.textContent = spd;
+          if (spd <= 0) {
+            clearInterval(iv);
+            gearEl.textContent = 'P';
+          }
+        }, Math.round(1500 / 42));
+        slideTimers.push({ type: 'interval', id: iv });
+      }
+    }
+
     function activateSlide(index) {
       slides.forEach(s => s.classList.remove('m01-active'));
       slides[index].classList.add('m01-active');
       current = index;
+      runSlideAnimation(index, slides[index]);
       if (onChangeCb) onChangeCb(index);
     }
 

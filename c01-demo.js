@@ -198,6 +198,39 @@
   transition: background 0.15s, border-color 0.15s;
 }
 .c01-c1_1-close:hover { background: #3a3a3a; border-color: #888; }
+.c01-c1_1-items {
+  position: absolute;
+  top: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: center;
+}
+.c01-c1_1-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100px;
+}
+.c01-c1_1-thumb {
+  width: 90px;
+  height: 80px;
+  border-radius: 8px;
+  border: 1.5px solid #555;
+  background:
+    linear-gradient(to bottom right, transparent 49.7%, #666 49.7%, #666 50.3%, transparent 50.3%),
+    linear-gradient(to bottom left,  transparent 49.7%, #666 49.7%, #666 50.3%, transparent 50.3%),
+    #333;
+}
+.c01-c1_1-iname {
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+  line-height: 1.3;
+}
 
 /* =============================================
    SCREEN C2_1 — AR Approaching Gallery
@@ -438,7 +471,10 @@
   line-height: 1;
   font-family: inherit;
   margin-top: 1px;
-  transition: color 0.3s;
+  transition: color 0.15s;
+}
+.c01-c3ar-star.c01-star-saved {
+  color: #f5c518;
 }
 .c01-c3ar-more {
   margin-top: 10px;
@@ -890,18 +926,24 @@
   color: #666;
   letter-spacing: 1px;
 }
-.c01-scene-close {
+.c01-scene-close,
+.c01-c1_1-close,
+.c01-c2_1-home,
+.c01-c2_2-home,
+.c01-c3-close,
+.c01-c4-close,
+.c01-nav-btn {
   position: absolute;
   bottom: 22px;
   left: 50%;
   transform: translateX(-50%);
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: #1e1e1e;
-  border: 1px solid #444;
-  color: #aaa;
-  font-size: 15px;
+  background: #2a2a2a;
+  border: 1.5px solid #555;
+  color: #ccc;
+  font-size: 17px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -909,8 +951,15 @@
   font-family: inherit;
   transition: background 0.15s;
   z-index: 5;
+  flex-shrink: 0;
 }
-.c01-scene-close:hover { background: #2a2a2a; }
+.c01-scene-close:hover,
+.c01-c1_1-close:hover,
+.c01-c2_1-home:hover,
+.c01-c2_2-home:hover,
+.c01-c3-close:hover,
+.c01-c4-close:hover,
+.c01-nav-btn:hover { background: #3a3a3a; }
 `;
 
   // ─── Screen HTML builders ──────────────────────────────────────────────────
@@ -952,7 +1001,7 @@
       <!-- C1_1: My Collection -->
       <div id="c01-screen-C1_1" class="c01-screen c01-c1_1">
         <div class="c01-c1_1-title">My Collection</div>
-        <div class="c01-c1_1-empty">Empty</div>
+        <div id="c01-c1_1-content"><div class="c01-c1_1-empty">Empty</div></div>
         <button class="c01-c1_1-close" data-action="to-C1">&#10005;</button>
       </div>
 
@@ -1234,8 +1283,10 @@
     let onChangeCb = null;
     let currentScreen = 'C0';
     let prevScreen = null;
+    let homeSource = null; // what screen the user came from when opening C1
     let savedCount = 0;
     let lastSavedExhibit = null;
+    let savedExhibits = [];
     const timers = [];
 
     function updateRecommendation() {
@@ -1253,6 +1304,33 @@
       c3d.querySelector('.c01-c3d-thumb').textContent = isMeat ? '🥩' : '🪨';
       c3d.querySelector('.c01-c3d-name').textContent  = isMeat ? 'Meat-shaped Stone' : 'Jadeite Cabbage';
     }
+
+    function updateStarButtons() {
+      ['C3a', 'C3b'].forEach(function(id) {
+        var screen = root.querySelector('#c01-screen-' + id);
+        if (!screen) return;
+        var btn = screen.querySelector('.c01-c3ar-star');
+        if (!btn) return;
+        var saved = savedExhibits.indexOf(id) !== -1;
+        btn.textContent = saved ? '★' : '☆';
+        btn.classList.toggle('c01-star-saved', saved);
+      });
+    }
+
+    var EXHIBIT_LABELS = { 'C3a': 'Jadeite Cabbage', 'C3b': 'Meat-shaped Stone' };
+    function updateCollection() {
+      var el = root.querySelector('#c01-c1_1-content');
+      if (!el) return;
+      if (savedExhibits.length === 0) {
+        el.innerHTML = '<div class="c01-c1_1-empty">Empty</div>';
+        return;
+      }
+      var items = savedExhibits.map(function(id) {
+        return '<div class="c01-c1_1-item"><div class="c01-c1_1-thumb"></div><div class="c01-c1_1-iname">' + EXHIBIT_LABELS[id] + '</div></div>';
+      }).join('');
+      el.innerHTML = '<div class="c01-c1_1-items">' + items + '</div>';
+    }
+
     const tabContent = {
       jade:    'Natural jadeite gradation from white base to deep green — no dye used.',
       katydid: 'Locust and katydid are traditional metaphors for having numerous children.',
@@ -1265,6 +1343,10 @@
       timers.length = 0;
 
       var screen = SCREENS[index];
+      // Track where C1 (Home) was opened from, but ignore C1_1 (sub-page)
+      if (screen.id === 'C1' && currentScreen !== 'C1_1') {
+        homeSource = currentScreen;
+      }
       prevScreen = currentScreen;
       currentScreen = screen.id;
 
@@ -1293,6 +1375,9 @@
       }
       if (screen.id === 'C6') {
         timers.push(setTimeout(function() { showStep(idToIndex['C7']); }, 3000));
+      }
+      if (screen.id === 'C3a' || screen.id === 'C3b') {
+        updateStarButtons();
       }
     }
 
@@ -1332,17 +1417,34 @@
 
       if (action === 'home-back') {
         e.stopPropagation();
-        showScreen(prevScreen === 'C0' || prevScreen === null ? 'C2_2' : prevScreen);
+        showScreen(homeSource === 'C0' || homeSource === null ? 'C2_2' : homeSource);
         return;
       }
 
       if (action) {
         e.stopPropagation();
         if (action === 'to-C3d') {
+          var idx = savedExhibits.indexOf(currentScreen);
+          if (idx !== -1) {
+            // Already saved — unsave
+            savedExhibits.splice(idx, 1);
+            savedCount = Math.max(0, savedCount - 1);
+            if (lastSavedExhibit === currentScreen) {
+              lastSavedExhibit = savedExhibits[savedExhibits.length - 1] || null;
+            }
+            updateStarButtons();
+            updateRecommendation();
+            updateCollection();
+            return; // don't navigate to C3d
+          }
+          // Not yet saved — save and navigate to confirmation
           savedCount++;
-          lastSavedExhibit = currentScreen; // 'C3a' or 'C3b'
+          lastSavedExhibit = currentScreen;
+          savedExhibits.push(currentScreen);
           updateSavedScreen();
           updateRecommendation();
+          updateCollection();
+          updateStarButtons();
         }
         const dest = action.replace('to-', '');
         showScreen(dest);
@@ -1366,6 +1468,10 @@
       if (currentScreen === 'C7') {
         savedCount = 0;
         lastSavedExhibit = null;
+        savedExhibits = [];
+        homeSource = null;
+        updateCollection();
+        updateStarButtons();
         showScreen('C0');
       }
     }
