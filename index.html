@@ -215,7 +215,7 @@
   }
 
   /* ── Step pagination (M01 + M02 + C01) ── */
-  #m02-steps, #m01-steps, #c01-steps-v1, #c01-steps-v2 {
+  #m02-steps, #m01-steps, #c01-steps-v1, #c01-steps-v2, #c01-steps-v3 {
     display: none;
     width: 460px;
     margin-top: 10px;
@@ -267,6 +267,7 @@
 <div id="c01-tabs">
   <button class="c01-tab c01-tab-active" data-variant="v1">v1 · 1 exhibit</button>
   <button class="c01-tab"                data-variant="v2">v2 · 2 exhibits</button>
+  <button class="c01-tab"                data-variant="v3">v3 · camera AR</button>
 </div>
 
 <!-- Demo switcher -->
@@ -300,6 +301,7 @@
 <div id="m01-steps"></div>
 <div id="c01-steps-v1"></div>
 <div id="c01-steps-v2"></div>
+<div id="c01-steps-v3"></div>
 
 <!-- Timer + pagination -->
 <div id="footer">
@@ -310,10 +312,12 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script src="m01-demo.js"></script>
 <script src="m02-demo.js"></script>
 <script src="c01-demo-v1.js"></script>
 <script src="c01-demo.js"></script>
+<script src="c01-demo-v3.js"></script>
 <script>
   const demos = ['M01', 'M02', 'C01'];
   const demoDurations = { M01: 59, M02: 65, C01: null };
@@ -445,12 +449,14 @@
     if (id === 'C01') {
       if (activeC01Variant === 'v1' && typeof mountC01v1 === 'function') ctrl = mountC01v1(el);
       if (activeC01Variant === 'v2' && typeof mountC01v2 === 'function') ctrl = mountC01v2(el);
+      if (activeC01Variant === 'v3' && typeof mountC01v3 === 'function') ctrl = mountC01v3(el);
     }
 
     document.getElementById('m01-steps').style.display    = 'none';
     document.getElementById('m02-steps').style.display    = 'none';
     document.getElementById('c01-steps-v1').style.display = 'none';
     document.getElementById('c01-steps-v2').style.display = 'none';
+    document.getElementById('c01-steps-v3').style.display = 'none';
     document.getElementById('c01-tabs').style.display     = (id === 'C01') ? 'flex' : 'none';
 
     if (ctrl) {
