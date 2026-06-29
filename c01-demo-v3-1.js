@@ -238,7 +238,7 @@
    SCREEN C2_1 — AR Approaching Gallery
    ============================================= */
 .c01-c2_1 {
-  background: transparent; /* see-through: live camera shows behind overlays */
+  background: transparent;
 }
 .c01-c2_1-badge {
   position: absolute;
@@ -312,7 +312,7 @@
    SCREEN C2_2 — AR NFC Trigger
    ============================================= */
 .c01-c2_2 {
-  background: transparent; /* see-through: live camera shows behind overlays */
+  background: transparent;
 }
 .c01-c2_2-top {
   position: absolute;
@@ -343,14 +343,6 @@
   white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 0 10px #7c3aed44;
-  /* V3: hidden until QR detection reveals it */
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-.c01-c2_2-exhibit.c01-v3-tag-visible {
-  opacity: 1;
-  pointer-events: auto;
 }
 .c01-c2_2-home {
   position: absolute;
@@ -407,7 +399,13 @@
    SCREEN C3 — AR Hotspot (C3a / C3b states)
    ============================================= */
 .c01-c3ar {
-  background: transparent; /* see-through: live camera shows behind overlays */
+  background: transparent;
+}
+.c01-v3-ar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  pointer-events: none;
 }
 .c01-c3ar-dot {
   position: absolute;
@@ -1091,6 +1089,7 @@
 
       <!-- C2_1: AR Approaching Gallery (see-through) -->
       <div id="c01-screen-C2_1" class="c01-screen c01-c2_1">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1106,6 +1105,7 @@
 
       <!-- C2_2: AR NFC Trigger (see-through) -->
       <div id="c01-screen-C2_2" class="c01-screen c01-c2_2">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1114,13 +1114,14 @@
           <div class="c01-c2_2-gallery">Jade Gallery</div>
           <div class="c01-c2_2-instruction">Move closer to learn more</div>
         </div>
-        <div class="c01-c2_2-exhibit" id="c01-v3-tag-C3a" data-action="to-C3a" style="top:148px; right:54px;">Jadeite Cabbage</div>
-        <div class="c01-c2_2-exhibit" id="c01-v3-tag-C3b" data-action="to-C3b" style="top:292px; left:66px;">Meat-shaped Stone</div>
+        <div class="c01-c2_2-exhibit" data-action="to-C3a" style="top:148px; right:54px;">Jadeite Cabbage</div>
+        <div class="c01-c2_2-exhibit" data-action="to-C3b" style="top:292px; left:66px;">Meat-shaped Stone</div>
         <div class="c01-c2_2-home" data-action="to-C1">⌂</div>
       </div>
 
       <!-- C3a: AR Hotspot (Jadeite Cabbage) — scene 6a (see-through) -->
       <div id="c01-screen-C3a" class="c01-screen c01-c3ar">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1178,6 +1179,7 @@
 
       <!-- C3b: AR Hotspot (Meat-shaped Stone) (see-through) -->
       <div id="c01-screen-C3b" class="c01-screen c01-c3ar">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1305,7 +1307,7 @@
   // Store cleanup refs per container
   const _state = new WeakMap();
 
-  function mountC01v3(container) {
+  function mountC01v31(container) {
     // 1. Clean up any previous instance (timers + camera stream)
     if (_state.has(container)) {
       const old = _state.get(container);
@@ -1343,65 +1345,40 @@
     camVideo.style.visibility = 'hidden';
     root.prepend(camVideo);
 
-    // QR scanning — continuous presence detection while on C2_2.
-    // Detected QR → show corresponding exhibit tag.
-    // QR removed → hide tag after a short debounce (handles brief misreads).
-    const QR_MAP = { 'jade': 'C3a', 'meat': 'C3b' };
+    // QR scanning — active only while on C2_2 (exhibit selection scene)
+    const QR_MAP = {
+      'jade': 'C3a',
+      'meat': 'C3b',
+    };
     const qrCanvas = document.createElement('canvas');
     qrCanvas.width  = 320;
     qrCanvas.height = 320;
     const qrCtx = qrCanvas.getContext('2d');
     let qrScanning = false;
-    const tagHideTimers = { C3a: null, C3b: null };
-
-    function setTagVisible(dest, visible) {
-      var el = root.querySelector('#c01-v3-tag-' + dest);
-      if (el) el.classList.toggle('c01-v3-tag-visible', visible);
-    }
-
-    function hideAllTags() {
-      ['C3a', 'C3b'].forEach(function(dest) {
-        if (tagHideTimers[dest]) { clearTimeout(tagHideTimers[dest]); tagHideTimers[dest] = null; }
-        setTagVisible(dest, false);
-      });
-    }
 
     function startQrScan() {
       if (qrScanning || !window.jsQR) return;
       qrScanning = true;
       (function scan() {
         if (!qrScanning) return;
-        var detectedDest = null;
         if (camVideo.readyState >= 2) {
           qrCtx.drawImage(camVideo, 0, 0, 320, 320);
           var img  = qrCtx.getImageData(0, 0, 320, 320);
           var code = window.jsQR(img.data, 320, 320, { inversionAttempts: 'dontInvert' });
-          if (code) detectedDest = QR_MAP[code.data.trim().toLowerCase()] || null;
-        }
-        ['C3a', 'C3b'].forEach(function(dest) {
-          if (dest === detectedDest) {
-            // Present: show immediately, cancel any pending hide
-            if (tagHideTimers[dest]) { clearTimeout(tagHideTimers[dest]); tagHideTimers[dest] = null; }
-            setTagVisible(dest, true);
-          } else {
-            // Absent: schedule hide after 500ms (debounce brief misreads)
-            var el = root.querySelector('#c01-v3-tag-' + dest);
-            if (el && el.classList.contains('c01-v3-tag-visible') && !tagHideTimers[dest]) {
-              tagHideTimers[dest] = setTimeout(function() {
-                setTagVisible(dest, false);
-                tagHideTimers[dest] = null;
-              }, 2000);
+          if (code) {
+            var dest = QR_MAP[code.data.trim().toLowerCase()];
+            if (dest) {
+              stopQrScan();
+              showScreen(dest);
+              return;
             }
           }
-        });
+        }
         if (qrScanning) requestAnimationFrame(scan);
       })();
     }
 
-    function stopQrScan() {
-      qrScanning = false;
-      hideAllTags();
-    }
+    function stopQrScan() { qrScanning = false; }
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
@@ -1799,9 +1776,9 @@
 
   // ─── Export ────────────────────────────────────────────────────────────────
   if (typeof window !== 'undefined') {
-    window.mountC01v3 = mountC01v3;
+    window.mountC01v31 = mountC01v31;
   }
 
 })();
 
-if (typeof module !== 'undefined') module.exports = { mountC01v3 };
+if (typeof module !== 'undefined') module.exports = { mountC01v31 };

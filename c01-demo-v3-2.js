@@ -238,7 +238,7 @@
    SCREEN C2_1 — AR Approaching Gallery
    ============================================= */
 .c01-c2_1 {
-  background: transparent; /* see-through: live camera shows behind overlays */
+  background: transparent;
 }
 .c01-c2_1-badge {
   position: absolute;
@@ -312,7 +312,7 @@
    SCREEN C2_2 — AR NFC Trigger
    ============================================= */
 .c01-c2_2 {
-  background: transparent; /* see-through: live camera shows behind overlays */
+  background: transparent;
 }
 .c01-c2_2-top {
   position: absolute;
@@ -407,7 +407,13 @@
    SCREEN C3 — AR Hotspot (C3a / C3b states)
    ============================================= */
 .c01-c3ar {
-  background: transparent; /* see-through: live camera shows behind overlays */
+  background: transparent;
+}
+.c01-v3-ar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  pointer-events: none;
 }
 .c01-c3ar-dot {
   position: absolute;
@@ -1091,6 +1097,7 @@
 
       <!-- C2_1: AR Approaching Gallery (see-through) -->
       <div id="c01-screen-C2_1" class="c01-screen c01-c2_1">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1106,6 +1113,7 @@
 
       <!-- C2_2: AR NFC Trigger (see-through) -->
       <div id="c01-screen-C2_2" class="c01-screen c01-c2_2">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1121,6 +1129,7 @@
 
       <!-- C3a: AR Hotspot (Jadeite Cabbage) — scene 6a (see-through) -->
       <div id="c01-screen-C3a" class="c01-screen c01-c3ar">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1178,6 +1187,7 @@
 
       <!-- C3b: AR Hotspot (Meat-shaped Stone) (see-through) -->
       <div id="c01-screen-C3b" class="c01-screen c01-c3ar">
+        <div class="c01-v3-ar-overlay"></div>
         <div class="c01-v3-hud-ring">
           <div class="c01-v3-corner-b c01-v3-corner-bl"></div>
           <div class="c01-v3-corner-b c01-v3-corner-br"></div>
@@ -1305,7 +1315,7 @@
   // Store cleanup refs per container
   const _state = new WeakMap();
 
-  function mountC01v3(container) {
+  function mountC01v32(container) {
     // 1. Clean up any previous instance (timers + camera stream)
     if (_state.has(container)) {
       const old = _state.get(container);
@@ -1799,9 +1809,9 @@
 
   // ─── Export ────────────────────────────────────────────────────────────────
   if (typeof window !== 'undefined') {
-    window.mountC01v3 = mountC01v3;
+    window.mountC01v32 = mountC01v32;
   }
 
 })();
 
-if (typeof module !== 'undefined') module.exports = { mountC01v3 };
+if (typeof module !== 'undefined') module.exports = { mountC01v32 };
